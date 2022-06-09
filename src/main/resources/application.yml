@@ -1,1 +1,20 @@
-
+spring:
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:desafio
+    driverClassName: org.h2.Driver
+    password: ''
+  h2:
+    console:
+      enabled: 'true'
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: 'true'
+    generate-ddl: 'true'
+    properties:
+      hibernate:
+        format_sql: 'true'
+        show_sql: 'true'
+    hibernate:
+      ddl-auto: update
