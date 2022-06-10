@@ -1,16 +1,18 @@
 package com.serasa.desafio.service;
 
-import com.serasa.desafio.service.exception.NotContentException;
 import com.serasa.desafio.gateway.AffinityGateway;
 import com.serasa.desafio.gateway.PersonGateway;
 import com.serasa.desafio.gateway.ScoreGateway;
 import com.serasa.desafio.gateway.database.dto.FindPersonOut;
 import com.serasa.desafio.gateway.database.mapper.PersonMapper;
 import com.serasa.desafio.gateway.database.model.Score;
+import com.serasa.desafio.service.exception.NotContentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,24 @@ public class FindPersonService {
 
     }
 
+    public List<FindPersonOut> findAll() {
+
+        List<FindPersonOut> listPerson = new ArrayList<>();
+
+        personGateway.findAll().forEach(p -> {
+
+            var affinity = affinityGateway.find(p.getRegiao()).orElseThrow(NotContentException::new);
+
+            var score = scoreGateway.findAll();
+
+            listPerson.add(findPersonMapper.toFindPersonOut(p, affinity, filterScore(score, p.getScore())));
+
+        });
+
+        return Optional.of(listPerson).orElseThrow(NotContentException::new);
+
+    }
+
     private String filterScore(List<Score> score, Integer personScore) {
         String value = "";
         for (Score s : score) {
@@ -47,5 +67,4 @@ public class FindPersonService {
         }
         return value;
     }
-
 }

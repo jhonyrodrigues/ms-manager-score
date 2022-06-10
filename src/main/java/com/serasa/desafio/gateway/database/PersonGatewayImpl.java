@@ -1,13 +1,14 @@
 package com.serasa.desafio.gateway.database;
 
+import com.serasa.desafio.gateway.PersonGateway;
 import com.serasa.desafio.gateway.database.model.Person;
 import com.serasa.desafio.gateway.database.repository.PersonRepository;
-import com.serasa.desafio.gateway.PersonGateway;
 import com.serasa.desafio.gateway.exception.GatewayException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -30,6 +31,16 @@ public class PersonGatewayImpl implements PersonGateway {
     @Override
     public Optional<Person> find(String id) {
         return personRepository.findById(id);
+    }
+
+    @Override
+    public List<Person> findAll() {
+        try {
+            log.info("[GATEWAY] - Find all persons");
+            return personRepository.findAll();
+        } catch (Exception e) {
+            throw new GatewayException("[GATEWAY] - Problem to find all persons", e);
+        }
     }
 
 }

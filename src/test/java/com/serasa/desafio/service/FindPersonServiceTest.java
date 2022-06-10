@@ -8,7 +8,6 @@ import com.serasa.desafio.gateway.database.mapper.PersonMapper;
 import com.serasa.desafio.gateway.database.model.Affinity;
 import com.serasa.desafio.gateway.database.model.Person;
 import com.serasa.desafio.gateway.database.model.Score;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -78,7 +79,30 @@ class FindPersonServiceTest {
         assertEquals(response.getIdade(), person.getIdade());
         assertEquals(response.getScoreDescricao(), score.getDescricao());
         assertEquals(response.getEstados(), affinity.getEstado());
-        assertDoesNotThrow(()-> findPersonService.find(person.getId()));
+        assertDoesNotThrow(() -> findPersonService.find(person.getId()));
+
+    }
+
+    @Test
+    void mustFindAllPersonsSuccessfully() {
+
+        when(personGateway.findAll()).thenReturn(List.of(person));
+
+        when(affinityGateway.find(any())).thenReturn(Optional.of(affinity));
+
+        when(scoreGateway.findAll()).thenReturn(List.of(score));
+
+        when(personMapper.toFindPersonOut(any(), any(), any())).thenReturn(personOut);
+
+        var response = findPersonService.findAll();
+
+        assertNotNull(response);
+        assertEquals(response.get(0).getNome(), person.getNome());
+        assertEquals(response.get(0).getTelefone(), person.getTelefone());
+        assertEquals(response.get(0).getIdade(), person.getIdade());
+        assertEquals(response.get(0).getScoreDescricao(), score.getDescricao());
+        assertEquals(response.get(0).getEstados(), affinity.getEstado());
+        assertDoesNotThrow(() -> findPersonService.findAll());
 
     }
 
