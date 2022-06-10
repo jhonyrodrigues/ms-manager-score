@@ -1,7 +1,10 @@
 package com.serasa.desafio.gateway.database.mapper;
 
 import com.serasa.desafio.gateway.database.dto.CreatePersonIn;
+import com.serasa.desafio.gateway.database.dto.FindPersonOut;
+import com.serasa.desafio.gateway.database.model.Affinity;
 import com.serasa.desafio.gateway.database.model.Person;
+import com.serasa.desafio.gateway.database.model.Score;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,5 +17,9 @@ public class PersonMapper {
                 .idade(createPersonIn.getIdade()).cidade(createPersonIn.getCidade()).estado(createPersonIn.getEstado())
                 .score(createPersonIn.getScore()).regiao(createPersonIn.getRegiao()).dataInclusao(LocalDateTime.now())
                 .build();
+    }
+
+    public FindPersonOut toFindPersonOut(Person person, Affinity affinity, String scoreDescricao) {
+        return new FindPersonOut(person.getNome(), person.getTelefone(), person.getIdade(), scoreDescricao, affinity.getEstado());
     }
 }

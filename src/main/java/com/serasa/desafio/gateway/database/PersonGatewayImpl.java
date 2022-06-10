@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +25,11 @@ public class PersonGatewayImpl implements PersonGateway {
         } catch (Exception e) {
             throw new GatewayException("[GATEWAY] - Problem to create person", e);
         }
+    }
+
+    @Override
+    public Optional<Person> find(String id) {
+        return personRepository.findById(id);
     }
 
 }

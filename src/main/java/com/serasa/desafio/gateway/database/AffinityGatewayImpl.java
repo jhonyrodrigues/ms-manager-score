@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,6 +25,11 @@ public class AffinityGatewayImpl implements AffinityGateway {
         } catch (Exception e) {
             throw new GatewayException("[GATEWAY] - Problem to create affinity", e);
         }
+    }
+
+    @Override
+    public Optional<Affinity> find(String regiao) {
+        return affinityRepository.findById(regiao);
     }
 
 }
